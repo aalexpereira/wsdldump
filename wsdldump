@@ -1,0 +1,7 @@
+#!/bin/bash
+
+curl -ks "$1"  |egrep "http://" |awk -F '"' '{print $2}' |egrep "\//" |awk -F '"/' '{print $1}' |sed 's/=/\n/g'|sed 's/<soap:binding style="document" transport="//g'|sed 's/<soap:address location="//g'|sed "s/<?xmlversion='1.0'encoding='UTF-8'?><wsdl:definitionsxmlns:xsd=//g" |tr -d '"' |tr -d "'" |egrep -v "<|>|unqualified|xmlsoap.org|w3.org|1.0 encoding|targetNamespace" |sed 's/xmlns:soap//g' |sed 's/attributeFormDefault//g' |tr -d ' '|sort -u|egrep "\/" |egrep "http://|https://" |sed 's/xmlns:dsig//g' |sed 's/xmlns:sch1//g'| sed 's/xmlns:wsdl//g'|sed 's/xmlns:ds//g'|sed 's/xmlns:xs//g' |sed 's/:generatedBy//g'|sed 's/xmlns:xsd//g' >> wsdl.txt
+curl -ks "$1" |egrep "\//" |awk -F '"/' '{print $1}' |sed 's/=/\n/g' |sed ' s/:soap//g' |sed 's/:tns//g' |sed 's/xmlns:wsp1_2//g' |sed 's/xmlns//g'| sed 's/xmlns:xsd//g' |sed 's/xmlns:tns//g' |sed 's/xmlns:soap//g' |sed 's/schemaLocation//g' |sed 's/wsam:Action//g' |sed 's/<soap:binding style="document" transport="//g'|sed 's/<soap:address location="//g'|sed "s/<?xmlversion='1.0'encoding='UTF-8'?><wsdl:definitionsxmlns:xsd=//g" |tr -d '"' |tr -d "'"|sed 's/=/\n/g' |egrep -v "<|>|unqualified|xmlsoap.org|w3.org|1.0 encoding|targetNamespace" |sed 's/xmlns:soap//g' |sed 's/attributeFormDefault//g' |tr -d ' '|sort -u|egrep "\/" |egrep "http://|https://" |sed 's/xmlns:dsig//g' |sed 's/xmlns:sch1//g'| sed 's/xmlns:wsdl//g'|sed 's/xmlns:ds//g'|sed 's/xmlns:xs//g' |sed 's/:generatedBy//g'|sed 's/xmlns:xsd//g' >> wsdl.txt
+
+cat wsdl.txt |sort -u
+rm -f wsdl.txt
